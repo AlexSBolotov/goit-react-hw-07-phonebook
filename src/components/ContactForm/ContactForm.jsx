@@ -1,10 +1,11 @@
 import s from './ContactForm.module.css';
 import { useDispatch, useSelector } from 'react-redux';
-import { getContacts } from 'redux/selectors';
-import { addContact } from 'redux/contactsSlice';
+import { nanoid } from '@reduxjs/toolkit';
+import { selectContacts } from 'redux/selectors';
+import { addContact } from 'redux/operations';
 
 export default function ContactForm() {
-  const contacts = useSelector(getContacts);
+  const contacts = useSelector(selectContacts);
   const dispatch = useDispatch();
 
   const onFormSubmit = e => {
@@ -15,10 +16,14 @@ export default function ContactForm() {
     const isNamesDublicated = contacts.some(
       el => el.name.toLowerCase() === name.toLowerCase()
     );
-
+    const payload = {
+      name: name,
+      number: number,
+      id: nanoid(),
+    };
     isNamesDublicated
       ? alert(`${name} is already in contacts.`)
-      : dispatch(addContact(name, number));
+      : dispatch(addContact(payload));
 
     form.reset();
   };
